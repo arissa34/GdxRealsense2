@@ -1,0 +1,4 @@
+dependencies {
+    implementation project(":gdx-jnigen-2.2.0:gdx-jnigen")
+    implementation gradleApi()
+}

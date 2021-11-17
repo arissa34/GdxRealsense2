@@ -1,0 +1,12 @@
+plugins {
+    id 'java-library'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    api "com.badlogicgames.gdx:gdx:$gdxVersion"
+    api project(':gdx-jnigen-2.2.0:gdx-jnigen')
+    api files('libs/rs2-natives.jar')
+}

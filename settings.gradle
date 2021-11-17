@@ -1,0 +1,7 @@
+include 'desktop', 'android', 'core',
+        'rs2_common_lib',
+        'rs2_android_lib',
+        'rs2_desktop_lib',
+        'gdx-jnigen-2.2.0:gdx-jnigen-loader',
+        'gdx-jnigen-2.2.0:gdx-jnigen-gradle',
+        'gdx-jnigen-2.2.0:gdx-jnigen'

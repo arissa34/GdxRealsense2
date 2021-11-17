@@ -1,0 +1,249 @@
+<project name="%projectName%" basedir="." default="postcompile">
+	<!-- include the environment -->
+	<property environment="env"/>	
+	<!-- output directory for temporary object files -->
+	<property name="buildDir" value="%buildDir%" />
+	<!-- output directory for the shared library -->
+	<property name="libsDir" value="%libsDir%" />
+	<!-- the name of the shared library -->
+	<property name="libName" value="%libName%"/>
+	<!-- the jni header jniPlatform to use -->
+	<property name="jniPlatform" value="mac"/>
+	<!-- the compiler to use when compiling c files -->
+	<property name="cCompiler" value="%cCompiler%"/>
+	<!-- the compiler to use when compiling c++ files -->
+	<property name="cppCompiler" value="%cppCompiler%"/>
+	<!-- the command to use when archiving files -->
+	<property name="archiver" value="%archiver%"/>
+	<!-- the compilerPrefix for the C & C++ compilers -->
+	<property name="compilerPrefix" value="%compilerPrefix%"/>
+	<!-- the compilerSuffix for the C & C++ compilers -->
+	<property name="compilerSuffix" value="%compilerSuffix%" />
+	
+	<property name="iphoneos-sdk" value="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/"/>
+	<property name="iphonesimulator-sdk" value="/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk"/>
+	
+	
+	<!-- define gcc compiler, options and files to compile -->
+	<property name="gcc" value="${compilerPrefix}${cCompiler}${compilerSuffix}"/>
+	<property name="gcc-opts" value="%cFlags%"/>
+	<fileset id="gcc-files" dir="./">
+		<exclude name="target/"/>		
+		%cIncludes%
+		%cExcludes%
+	</fileset>
+	
+	<!-- define g++ compiler, options and files to compile -->
+	<property name="g++" value="${compilerPrefix}${cppCompiler}${compilerSuffix}"/>
+	<property name="g++-opts" value="%cppFlags%"/>
+	<fileset id="g++-files" dir="./">
+		<exclude name="target/"/>
+		%cppIncludes%
+		%cppExcludes%
+	</fileset>
+
+	<!-- define ar and options -->
+	<property name="ar" value="${compilerPrefix}${archiver}${compilerSuffix}"/>
+	<property name="ar-opts" value="%archiverFlags%"/>
+	<property name="libraries" value="%libraries%"/>
+	
+	<!-- cleans the build directory, removes all object files and shared libs -->
+	<target name="clean">
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="${buildDir}"/>
+			<fileset dir="${libsDir}" includes="**/*"/>
+		</delete>
+	</target>
+	
+	<target name="create-build-dir">
+		<!-- FIXME this is pretty nasty :/
+		     The source files are copied to the output folders
+		     thereby creating the directory hiearchy.
+		     -->
+		<copy todir="${buildDir}">
+			<fileset refid="g++-files"/>
+			<fileset refid="gcc-files"/>
+		</copy>
+		<copy todir="${buildDir}/x86">
+			<fileset refid="g++-files"/>
+			<fileset refid="gcc-files"/>
+		</copy>
+		<copy todir="${buildDir}/arm32">
+			<fileset refid="g++-files"/>
+			<fileset refid="gcc-files"/>
+		</copy>
+		<copy todir="${buildDir}/arm64">
+			<fileset refid="g++-files"/>
+			<fileset refid="gcc-files"/>
+		</copy>
+		<delete>
+			<fileset dir="${buildDir}/x86">
+				<include name="*"/>
+			</fileset>
+			<fileset dir="${buildDir}/arm32">
+				<include name="*"/>
+			</fileset>
+			<fileset dir="${buildDir}/arm64">
+				<include name="*"/>
+			</fileset>
+		</delete>
+		<mkdir dir="${libsDir}"/>
+	</target>
+	
+	<!-- compiles all C and C++ files to object files in the build directory, for x86_64 builds-->
+	<target name="compile-x86_64" depends="create-build-dir">
+		<apply failonerror="true" executable="${g++}" dest="${buildDir}/x86" verbose="true">
+			<arg line="-isysroot ${iphonesimulator-sdk} -arch x86_64 -miphoneos-version-min=9.0 ${g++-opts}"/>
+			<arg value="-Ijni-headers"/>
+			<arg value="-Ijni-headers/${jniPlatform}"/>
+			<arg value="-I."/>
+			%headerDirs%
+			<srcfile/>
+			<arg value="-o"/>
+			<targetfile/>
+			<fileset refid="g++-files"/>
+			<compositemapper>
+				<mapper type="glob" from="*.cpp" to="*.o"/>
+				<mapper type="glob" from="*.mm" to="*.o"/>
+			</compositemapper>
+		</apply>
+		<apply failonerror="true" executable="${gcc}" dest="${buildDir}/x86" verbose="true">
+			<arg line="-isysroot ${iphonesimulator-sdk} -arch x86_64 -miphoneos-version-min=9.0 ${gcc-opts}"/>
+			<arg value="-Ijni-headers"/>
+			<arg value="-Ijni-headers/${jniPlatform}"/>
+			<arg value="-I."/>
+			%headerDirs%
+			<srcfile/>
+			<arg value="-o"/>
+			<targetfile/>
+			<fileset refid="gcc-files"/>
+			<compositemapper>
+				<mapper type="glob" from="*.c" to="*.o"/>
+			</compositemapper>
+		</apply>
+	</target>	
+
+	<!-- archives the shared library based on the previously compiled object files -->
+	<target name="archive-x86_64" depends="compile-x86_64">
+		<fileset dir="${buildDir}/x86" id="objFileSet">
+			<patternset>
+				<include name="**/*.o" />
+			</patternset>
+		</fileset>
+		<pathconvert pathsep=" " property="objFiles" refid="objFileSet" />
+		<exec executable="${ar}" failonerror="true" dir="${buildDir}/x86">
+			<arg line="${ar-opts}" />
+			<arg path="${libsDir}/${libName}.x86_64" />
+			<arg line="${objFiles}"/>
+			<arg line="${libraries}" />
+		</exec>
+	</target>
+	
+	<!-- compiles all C and C++ files to object files in the build directory, for arm64 builds-->
+	<target name="compile-arm64" depends="create-build-dir">
+		<apply failonerror="true" executable="${g++}" dest="${buildDir}/arm64" verbose="true">
+			<arg line="-isysroot ${iphoneos-sdk} -arch arm64 -miphoneos-version-min=9.0 -fembed-bitcode ${g++-opts}"/>
+			<arg value="-Ijni-headers"/>
+			<arg value="-Ijni-headers/${jniPlatform}"/>
+			<arg value="-I."/>
+			%headerDirs%
+			<srcfile/>
+			<arg value="-o"/>
+			<targetfile/>
+			<fileset refid="g++-files"/>
+			<compositemapper>
+				<mapper type="glob" from="*.cpp" to="*.o"/>
+				<mapper type="glob" from="*.mm" to="*.o"/>
+			</compositemapper>
+		</apply>
+		<apply failonerror="true" executable="${gcc}" dest="${buildDir}/arm64" verbose="true">
+			<arg line="-isysroot ${iphoneos-sdk} -arch arm64 -miphoneos-version-min=9.0 -fembed-bitcode ${gcc-opts}"/>
+			<arg value="-Ijni-headers"/>
+			<arg value="-Ijni-headers/${jniPlatform}"/>
+			<arg value="-I."/>
+			%headerDirs%
+			<srcfile/>
+			<arg value="-o"/>
+			<targetfile/>
+			<fileset refid="gcc-files"/>
+			<compositemapper>
+				<mapper type="glob" from="*.c" to="*.o"/>
+			</compositemapper>
+		</apply>
+	</target>
+
+	<!-- archives the shared library based on the previously compiled object files -->
+	<target name="archive-arm64" depends="compile-arm64">
+		<fileset dir="${buildDir}/arm64" id="objFileSetArm64">
+			<patternset>
+				<include name="**/*.o" />
+			</patternset>
+		</fileset>
+		<pathconvert pathsep=" " property="objFilesArm64" refid="objFileSetArm64" />
+		<exec executable="${ar}" failonerror="true" dir="${buildDir}/arm64">
+			<arg line="${ar-opts}" />
+			<arg path="${libsDir}/${libName}.arm64" />
+			<arg line="${objFilesArm64}"/>
+			<arg line="${libraries}" />
+		</exec>
+	</target>
+
+	<!-- compiles all C and C++ files to object files in the build directory, for arm32 builds-->
+	<target name="compile-arm32" depends="create-build-dir">
+		<apply failonerror="true" executable="${g++}" dest="${buildDir}/arm32" verbose="true">
+			<arg line="-isysroot ${iphoneos-sdk} -arch armv7 -miphoneos-version-min=9.0 -fembed-bitcode ${g++-opts}"/>
+			<arg value="-Ijni-headers"/>
+			<arg value="-Ijni-headers/${jniPlatform}"/>
+			<arg value="-I."/>
+			%headerDirs%
+			<srcfile/>
+			<arg value="-o"/>
+			<targetfile/>
+			<fileset refid="g++-files"/>
+			<compositemapper>
+				<mapper type="glob" from="*.cpp" to="*.o"/>
+				<mapper type="glob" from="*.mm" to="*.o"/>
+			</compositemapper>
+		</apply>
+		<apply failonerror="true" executable="${gcc}" dest="${buildDir}/arm32" verbose="true">
+			<arg line="-isysroot ${iphoneos-sdk} -arch armv7 -miphoneos-version-min=9.0 -fembed-bitcode ${gcc-opts}"/>
+			<arg value="-Ijni-headers"/>
+			<arg value="-Ijni-headers/${jniPlatform}"/>
+			<arg value="-I."/>
+			%headerDirs%
+			<srcfile/>
+			<arg value="-o"/>
+			<targetfile/>
+			<fileset refid="gcc-files"/>
+			<compositemapper>
+				<mapper type="glob" from="*.c" to="*.o"/>
+			</compositemapper>
+		</apply>
+	</target>
+
+	<!-- archives the shared library based on the previously compiled object files -->
+	<target name="archive-arm32" depends="compile-arm32">
+		<fileset dir="${buildDir}/arm32" id="objFileSetArm32">
+			<patternset>
+				<include name="**/*.o" />
+			</patternset>
+		</fileset>
+		<pathconvert pathsep=" " property="objFilesArm32" refid="objFileSetArm32" />
+		<exec executable="${ar}" failonerror="true" dir="${buildDir}/arm32">
+			<arg line="${ar-opts}" />
+			<arg path="${libsDir}/${libName}.arm32" />
+			<arg line="${objFilesArm32}"/>
+			<arg line="${libraries}" />
+		</exec>
+	</target>
+
+	<target name="archive-fat">
+		<exec executable="lipo" failonerror="true" dir="${libsDir}">
+			<arg line="-create -output ${libName} ${libName}.x86_64 ${libName}.arm32 ${libName}.arm64"/>
+		</exec>
+	</target>
+
+	<target name="postcompile" depends="archive-x86_64,archive-arm32,archive-arm64,archive-fat">
+		%postcompile%
+	</target>
+</project>

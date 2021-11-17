@@ -1,0 +1,11 @@
+plugins {
+    id 'java-library'
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    implementation "org.usb4java:usb4java:1.3.0"
+    api project(':rs2_common_lib')
+}

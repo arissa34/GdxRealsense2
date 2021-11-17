@@ -1,0 +1,11 @@
+dependencies {
+    implementation "com.github.javaparser:javaparser-core:3.14.14"
+    testImplementation project(":gdx-jnigen-2.2.0:gdx-jnigen-loader")
+    testImplementation "junit:junit:4.12"
+}
+
+eclipse {
+    project {
+        name = "gdx-jnigen"
+    }
+}
