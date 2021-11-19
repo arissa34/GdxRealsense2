@@ -86,7 +86,7 @@ public class RS2MacOSBuilder {
         mac64.cIncludes = cIncludes;
         mac64.cppIncludes = cppIncludes;
         mac64.cppExcludes = excludes;
-        mac64.libraries = "-Wl,-rpath /Library/Realsense/lib -L/Library/Realsense/lib -lrealsense2";
+        mac64.libraries = "-Wl,-rpath ./../../../../../jni/realsense/libs/mac64 -L./../../../../../jni/realsense/libs/mac64 -lrealsense2";
 
         new AntScriptGenerator().generate(buildConfig, mac64);
 
