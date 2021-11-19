@@ -17,6 +17,11 @@ gwt-unitCache/
 www-test/
 .gwt-tmp/
 
+rs2_common_lib/obj/local/arm64-v8a/objs/
+rs2_common_lib/obj/local/armeabi-v7a/objs/
+rs2_common_lib/obj/local/x86/objs/
+rs2_common_lib/obj/local/x86_64/objs/
+
 ## Android Studio and Intellij and Android in general
 /android/libs/armeabi/
 /android/libs/armeabi-v7a/
