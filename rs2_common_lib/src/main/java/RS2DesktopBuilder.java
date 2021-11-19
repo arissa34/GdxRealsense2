@@ -5,7 +5,7 @@ import com.badlogic.gdx.jnigen.BuildTarget;
 import com.badlogic.gdx.jnigen.NativeCodeGenerator;
 import com.badlogic.gdx.utils.SharedLibraryLoader;
 
-public class RS2MacOSBuilder {
+public class RS2DesktopBuilder {
 
     public static void main(String[] args) throws Exception {
 
@@ -88,11 +88,27 @@ public class RS2MacOSBuilder {
         mac64.cppExcludes = excludes;
         mac64.libraries = "-Wl,-rpath /usr/local/lib -L/usr/local/lib -lrealsense2";
 
-        new AntScriptGenerator().generate(buildConfig, mac64);
+        BuildTarget win64 = BuildTarget.newDefaultTarget(BuildTarget.TargetOs.Windows, true, false);
+        win64.cppCompiler = "c++";
+        win64.cFlags += cFlags;
+        win64.cppFlags += cppFlags;
+        win64.headerDirs = headerDirs;
+        win64.cIncludes = cIncludes;
+        win64.cppIncludes = cppIncludes;
+        win64.cppExcludes = excludes;
+        //win64.compilerSuffix = ".exe";
+        win64.libraries = "-L./../../../../../jni/realsense/libs/win64 -lrealsense2";
+
+        new AntScriptGenerator().generate(buildConfig, mac64, win64);
 
         boolean macAntExecutionStatus = BuildExecutor.executeAnt("jni/build-macosx64.xml", "-v", "-Drelease=true", "clean", "postcompile");
         if (!macAntExecutionStatus) {
             throw new RuntimeException("Failure to execute mac ant.");
+        }
+
+        boolean winAntExecutionStatus = BuildExecutor.executeAnt("jni/build-windows64.xml", "-v", "-Drelease=true", "clean", "postcompile");
+        if (!winAntExecutionStatus) {
+            throw new RuntimeException("Failure to execute windows ant.");
         }
 
         boolean antExecutionStatus = BuildExecutor.executeAnt("jni/build.xml", "-v", "pack-natives");

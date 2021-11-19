@@ -45,7 +45,7 @@
 	<!-- define linker and options -->
 	<property name="linker" value="${compilerPrefix}${cppCompiler}${compilerSuffix}"/>
 	<property name="linker-opts" value="-shared -arch x86_64 -mmacosx-version-min=10.7 -stdlib=libc++"/>
-	<property name="libraries" value="-Wl,-rpath ./../../../../../jni/realsense/libs/mac64 -L./../../../../../jni/realsense/libs/mac64 -lrealsense2"/>
+	<property name="libraries" value="-Wl,-rpath /usr/local/lib -L/usr/local/lib -lrealsense2"/>
 
 	<!-- define stripper -->
 	<property name="stripper" value="${compilerPrefix}strip${compilerSuffix}"/>
