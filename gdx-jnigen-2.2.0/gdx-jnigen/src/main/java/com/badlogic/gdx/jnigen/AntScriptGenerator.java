@@ -172,6 +172,7 @@ public class AntScriptGenerator {
 				FileType.Classpath).readString();
 			template = template.replace("%precompile%", target.preCompileTask == null ? "" : target.preCompileTask);
 			template = template.replace("%postcompile%", target.postCompileTask == null ? "" : target.postCompileTask);
+			template = template.replace("%androidNdkSuffix%", target.androidNdkSuffix);
 			return template;
 		}
 
