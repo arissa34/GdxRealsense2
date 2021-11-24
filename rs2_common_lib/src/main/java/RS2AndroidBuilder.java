@@ -84,7 +84,7 @@ public class RS2AndroidBuilder {
         android.cIncludes = cIncludes;
         android.cppIncludes = cppIncludes;
         android.cppExcludes = excludes;
-        android.androidNdkSuffix = ".cmd";
+        //android.androidNdkSuffix = ".cmd"; // If you build that on windows don't forget that ! (I build that on mac so I don't need it)
         android.androidABIs = new String[]{"arm64-v8a", "armeabi-v7a", "x86", "x86_64"};
         android.androidSharedLib = "LOCAL_STATIC_LIBRARIES := librealsense2";
         android.androidAndroidMk = new String[]{

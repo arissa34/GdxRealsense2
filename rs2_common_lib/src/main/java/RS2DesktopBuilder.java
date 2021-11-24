@@ -80,6 +80,7 @@ public class RS2DesktopBuilder {
         BuildConfig buildConfig = new BuildConfig(libName, "../build/tmp/realsense/target", "libs", "jni");
 
         BuildTarget mac64 = BuildTarget.newDefaultTarget(BuildTarget.TargetOs.MacOsX, SharedLibraryLoader.is64Bit, SharedLibraryLoader.isARM);
+        mac64.cppCompiler = "ccache_g++";  // I used this trick : https://github.com/libgdx/libgdx/wiki/jnigen#ccache
         mac64.cFlags += cFlags;
         mac64.cppFlags += cppFlags;
         mac64.headerDirs = headerDirs;
@@ -89,14 +90,16 @@ public class RS2DesktopBuilder {
         mac64.libraries = "-Wl,-rpath /usr/local/lib -L/usr/local/lib -lrealsense2";
 
         BuildTarget win64 = BuildTarget.newDefaultTarget(BuildTarget.TargetOs.Windows, true, false);
-        win64.cppCompiler = "c++";
+        win64.compilerPrefix = "ccache_x86_64-w64-mingw32-";   // I used this trick : https://github.com/libgdx/libgdx/wiki/jnigen#ccache
+        win64.cppCompiler = "g++";
+        win64.cCompiler = "gcc";
         win64.cFlags += cFlags;
         win64.cppFlags += cppFlags;
         win64.headerDirs = headerDirs;
         win64.cIncludes = cIncludes;
         win64.cppIncludes = cppIncludes;
         win64.cppExcludes = excludes;
-        //win64.compilerSuffix = ".exe";
+        //win64.compilerSuffix = ".exe"; // If you build that on windows don't forget that ! (I build that on mac so I don't need it)
         win64.libraries = "-L./../../../../../jni/realsense/libs/win64 -lrealsense2";
 
         new AntScriptGenerator().generate(buildConfig, mac64, win64);

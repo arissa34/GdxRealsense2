@@ -80,6 +80,7 @@ public class RS2MacOSBuilder {
         BuildConfig buildConfig = new BuildConfig(libName, "../build/tmp/realsense/target", "libs", "jni");
 
         BuildTarget mac64 = BuildTarget.newDefaultTarget(BuildTarget.TargetOs.MacOsX, SharedLibraryLoader.is64Bit, SharedLibraryLoader.isARM);
+        mac64.cppCompiler = "ccache_g++";  // I used this trick : https://github.com/libgdx/libgdx/wiki/jnigen#ccache
         mac64.cFlags += cFlags;
         mac64.cppFlags += cppFlags;
         mac64.headerDirs = headerDirs;

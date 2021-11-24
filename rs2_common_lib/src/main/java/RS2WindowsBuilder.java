@@ -90,7 +90,7 @@ public class RS2WindowsBuilder {
         win64.cIncludes = cIncludes;
         win64.cppIncludes = cppIncludes;
         win64.cppExcludes = excludes;
-        win64.compilerSuffix = ".exe";
+        win64.compilerSuffix = ".exe";  // If you build that on windows don't forget that !
         win64.libraries = "-L./../../../../../jni/realsense/libs/win64 -lrealsense2";
 
         new AntScriptGenerator().generate(buildConfig, win64);
