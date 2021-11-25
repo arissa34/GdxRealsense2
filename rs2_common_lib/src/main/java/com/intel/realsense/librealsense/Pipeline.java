@@ -50,10 +50,10 @@ public class Pipeline extends LrsClass{
 
     /*JNI
     #include <jni.h>
-    #include "include/error.h"
-    #include "include/librealsense2/rs.h"
-    #include "include/librealsense2/h/rs_pipeline.h"
-    #include "include/frame_callback.h"
+    #include <error.h>
+    #include <librealsense2/rs.h>
+    #include <librealsense2/h/rs_pipeline.h>
+    #include <frame_callback.h>
 
     static frame_callback_data pdata = {NULL, 0, JNI_FALSE, NULL, NULL};
      */

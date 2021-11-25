@@ -60,8 +60,8 @@ public class DeviceList extends LrsClass {
     }
 
     /*JNI
-    #include "include/error.h"
-    #include "include/librealsense2/rs.h"
+    #include <error.h>
+    #include <librealsense2/rs.h>
      */
 
     private static native int nGetDeviceCount(long handle);/*

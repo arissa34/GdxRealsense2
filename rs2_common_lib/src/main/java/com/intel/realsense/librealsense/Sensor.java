@@ -106,12 +106,12 @@ public class Sensor extends Options {
     #include <jni.h>
     #include <memory>
     #include <vector>
-    #include "include/error.h"
+    #include <error.h>
 
-    #include "include/librealsense2/rs.h"
+    #include <librealsense2/rs.h>
 
-    #include "include/jni_logging.h"
-    #include "include/frame_callback.h"
+    #include <jni_logging.h>
+    #include <frame_callback.h>
 
     static frame_callback_data sdata = {NULL, 0, JNI_FALSE, NULL, NULL};
      */

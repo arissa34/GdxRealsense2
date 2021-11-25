@@ -12,7 +12,7 @@
 	<!-- the compiler to use when compiling c files -->
 	<property name="cCompiler" value="clang"/>
 	<!-- the compiler to use when compiling c++ files -->
-	<property name="cppCompiler" value="clang++"/>
+	<property name="cppCompiler" value="ccache_g++"/>
 	<!-- the command to use when archiving files -->
 	<property name="archiver" value="ar"/>
 	<!-- the compilerPrefix for the C & C++ compilers -->
@@ -22,18 +22,18 @@
 	
 	<!-- define gcc compiler, options and files to compile -->
 	<property name="gcc" value="${compilerPrefix}${cCompiler}${compilerSuffix}"/>	
-	<property name="gcc-opts" value="-c -Wall -O2 -arch x86_64 -DFIXED_POINT -fmessage-length=0 -fPIC -mmacosx-version-min=10.7 -stdlib=libc++ -frtti -fexceptions"/>
+	<property name="gcc-opts" value="-c -Wall -O2 -arch x86_64 -DFIXED_POINT -fmessage-length=0 -fPIC -mmacosx-version-min=10.7 -stdlib=libc++ -w -frtti -fexceptions"/>
 	<fileset id="gcc-files" dir="./">
 		<exclude name="target/"/>		
 				<include name="memcpy_wrap.c"/>
-		<include name="**/*.cpp"/>
+		<include name="**/*.c"/>
 
 		
 	</fileset>
 	
 	<!-- define g++ compiler, options and files to compile -->
 	<property name="g++" value="${compilerPrefix}${cppCompiler}${compilerSuffix}"/>
-	<property name="g++-opts" value="-c -Wall -O2 -arch x86_64 -DFIXED_POINT -fmessage-length=0 -fPIC -mmacosx-version-min=10.7 -stdlib=libc++ -std=c++11 -frtti -fexceptions"/>
+	<property name="g++-opts" value="-c -Wall -O2 -arch x86_64 -DFIXED_POINT -fmessage-length=0 -fPIC -mmacosx-version-min=10.7 -stdlib=libc++ -w -std=c++11 -frtti -fexceptions"/>
 	<fileset id="g++-files" dir="./">
 		<exclude name="target/"/>
 				<include name="**/*.cpp"/>
@@ -118,7 +118,9 @@
 			<arg value="-Ijni-headers"/>
 			<arg value="-Ijni-headers/${jniPlatform}"/>
 			<arg value="-I."/>
-						<arg value="-Irealsense"/>
+						<arg value="-Icpp/jnigen"/>
+			<arg value="-Icpp/realsense"/>
+			<arg value="-Icpp/realsense/include"/>
 
 			<srcfile/>
 			<arg value="-o"/>
@@ -134,7 +136,9 @@
 			<arg value="-Ijni-headers"/>
 			<arg value="-Ijni-headers/${jniPlatform}"/>
 			<arg value="-I."/>
-						<arg value="-Irealsense"/>
+						<arg value="-Icpp/jnigen"/>
+			<arg value="-Icpp/realsense"/>
+			<arg value="-Icpp/realsense/include"/>
 
 			<srcfile/>
 			<arg value="-o"/>

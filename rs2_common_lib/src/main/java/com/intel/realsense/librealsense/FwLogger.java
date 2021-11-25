@@ -55,8 +55,8 @@ public class FwLogger extends Device {
 
     /*JNI
     #include <jni.h>
-    #include "include/error.h"
-    #include "include/librealsense2/h/rs_internal.h"
+    #include <error.h>
+    #include <librealsense2/h/rs_internal.h>
      */
 
     private native long nGetFwLog(long fw_logger_handle);/*

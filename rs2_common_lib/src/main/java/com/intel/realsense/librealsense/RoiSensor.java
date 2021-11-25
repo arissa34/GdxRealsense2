@@ -23,9 +23,9 @@ public class RoiSensor extends Sensor {
 
     /*JNI
     #include <jni.h>
-    #include "include/error.h"
+    #include <error.h>
 
-    #include "include/librealsense2/rs.h"
+    #include <librealsense2/rs.h>
      */
 
     private static native void nSetRegionOfInterest(long handle, int minX, int minY, int maxX, int maxY);/*

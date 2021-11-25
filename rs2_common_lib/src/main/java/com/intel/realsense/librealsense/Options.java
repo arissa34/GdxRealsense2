@@ -74,9 +74,9 @@ public abstract class Options extends LrsClass implements OptionsInterface {
 
     /*JNI
     #include <jni.h>
-    #include "include/error.h"
+    #include <error.h>
 
-    #include "include/librealsense2/rs.h"
+    #include <librealsense2/rs.h>
      */
 
     private static native boolean nSupports(long handle, int option);/*

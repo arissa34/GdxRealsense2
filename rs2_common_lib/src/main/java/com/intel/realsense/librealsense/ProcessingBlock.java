@@ -4,9 +4,9 @@ public abstract class ProcessingBlock extends Options implements ProcessingBlock
 
     /*JNI
     #include <jni.h>
-    #include "include/error.h"
+    #include <error.h>
 
-    #include "include/librealsense2/rs.h"
+    #include <librealsense2/rs.h>
      */
 
     private static native void nDelete(long handle);/*

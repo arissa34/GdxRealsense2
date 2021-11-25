@@ -17,11 +17,11 @@ public class PipelineProfile extends LrsClass {
 
     /*JNI
     #include <jni.h>
-    #include "include/error.h"
-    #include "include/librealsense2/rs.h"
-    #include "include/librealsense2/h/rs_pipeline.h"
-    #include "include/jni_logging.h"
-    #include "include/frame_callback.h"
+    #include <error.h>
+    #include <librealsense2/rs.h>
+    #include <librealsense2/h/rs_pipeline.h>
+    #include <jni_logging.h>
+    #include <frame_callback.h>
      */
 
     private static native void nDelete(long handle);/*

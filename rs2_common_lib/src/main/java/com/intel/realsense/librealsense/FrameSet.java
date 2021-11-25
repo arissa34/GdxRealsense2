@@ -57,8 +57,8 @@ public class FrameSet extends Frame {
 
     /*JNI
     #include <jni.h>
-    #include "include/error.h"
-    #include "include/librealsense2/rs.h"
+    #include <error.h>
+    #include <librealsense2/rs.h>
      */
 
     private static native void nAddRef(long handle);/*

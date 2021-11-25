@@ -12,60 +12,34 @@ public class RS2MacOSBuilder {
         String libName = "rs2";
 
         String[] classes = new String[]{
-                "**/RsContext.java",
-                "**/DeviceList.java",
-                "**/Device.java",
-                "**/Pipeline.java",
-                "**/PipelineProfile.java",
-                "**/Config.java",
-                "**/Frame.java",
-                "**/FrameSet.java",
-                "**/FrameQueue.java",
-                "**/DepthFrame.java",
-                "**/VideoFrame.java",
-                "**/Points.java",
-                "**/StreamProfile.java",
-                "**/Sensor.java",
-                "**/Options.java",
-                "**/ProcessingBlock.java",
-                "**/Align.java",
-                "**/Colorizer.java",
-                "**/DecimationFilter.java",
-                "**/DisparityTransformFilter.java",
-                "**/HoleFillingFilter.java",
-                "**/Pointcloud.java",
-                "**/SpatialFilter.java",
-                "**/TemporalFilter.java",
-                "**/ThresholdFilter.java",
-                "**/ZeroOrderInvalidationFilter.java",
-                "**/YuyDecoder.java",
-                "**/HdrMerge.java",
-                "**/SequenceIdFilter.java",
-                "**/DepthSensor.java",
-                "**/RoiSensor.java",
-                "**/VideoStreamProfile.java",
-                "**/MotionStreamProfile.java",
-                "**/Utils.java",
-                "**/FwLogger.java",
-                "**/FwLogMsg.java",
-                "**/FwLogParsedMsg.java",
+                "**/*.java",
         };
 
+        String[] excludeClasses = new String[]{
+                "**/DeviceWatcher.java",
+                "**/DebugProtocol.java",
+                "**/UpdateDevice.java",
+                "**/Updatable.java",
+
+                "**/RS2AndroidBuilder.java",
+                "**/RS2DesktopBuilder.java",
+                "**/RS2MacOSBuilder.java",
+                "**/RS2WindowsBuilder.java"
+        };
         new NativeCodeGenerator().generate(
                 "src/main/java/",
                 "build/classes/java/main",
-                "jni/realsense",
+                "jni/cpp/jnigen",
                 classes,
-                new String[]{
-                        "**/RS2AndroidBuilder.java",
-                        "**/RS2DesktopBuilder.java"
-                }
+                excludeClasses
         );
         String[] headerDirs = new String[]{
-                "realsense"
+                "cpp/jnigen",
+                "cpp/realsense",
+                "cpp/realsense/include"
         };
         String[] cIncludes = new String[]{
-                "**/*.cpp"
+                "**/*.c"
         };
         String[] cppIncludes = new String[]{
                 "**/*.cpp"
@@ -73,14 +47,14 @@ public class RS2MacOSBuilder {
         String[] excludes = new String[]{
                 "**/frame_callback_android.cpp"
         };
-        String cFlags = " -frtti -fexceptions";
-        String cppFlags = " -std=c++11 -frtti -fexceptions";
+        String cFlags = " -w -frtti -fexceptions";
+        String cppFlags = " -w -std=c++11 -frtti -fexceptions";
 
-        // PATH START AT NativeCodeGenerator JNI PARAM (check above)
         BuildConfig buildConfig = new BuildConfig(libName, "../build/tmp/realsense/target", "libs", "jni");
 
         BuildTarget mac64 = BuildTarget.newDefaultTarget(BuildTarget.TargetOs.MacOsX, SharedLibraryLoader.is64Bit, SharedLibraryLoader.isARM);
-        mac64.cppCompiler = "ccache_g++";  // I used this trick : https://github.com/libgdx/libgdx/wiki/jnigen#ccache
+        mac64.cCompiler = "ccache_clang"; // I used this trick : https://github.com/libgdx/libgdx/wiki/jnigen#ccache
+        mac64.cppCompiler = "ccache_clang++"; // I used this trick : https://github.com/libgdx/libgdx/wiki/jnigen#ccache
         mac64.cFlags += cFlags;
         mac64.cppFlags += cppFlags;
         mac64.headerDirs = headerDirs;

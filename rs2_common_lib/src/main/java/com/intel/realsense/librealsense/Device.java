@@ -72,11 +72,11 @@ public class Device extends LrsClass {
     #include <jni.h>
     #include <memory>
     #include <vector>
-    #include "include/error.h"
+    #include <error.h>
 
-    #include "include/librealsense2/rs.h"
-    #include "include/librealsense2/hpp/rs_device.hpp"
-    #include "include/librealsense2/rs_advanced_mode.h"
+    #include <librealsense2/rs.h>
+    #include <librealsense2/hpp/rs_device.hpp>
+    #include <librealsense2/rs_advanced_mode.h>
      */
 
     private static native boolean nSupportsInfo(long handle, int info);/*

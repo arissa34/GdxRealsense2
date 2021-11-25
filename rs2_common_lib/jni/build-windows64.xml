@@ -12,28 +12,28 @@
 	<!-- the compiler to use when compiling c files -->
 	<property name="cCompiler" value="gcc"/>
 	<!-- the compiler to use when compiling c++ files -->
-	<property name="cppCompiler" value="c++"/>
+	<property name="cppCompiler" value="g++"/>
 	<!-- the command to use when archiving files -->
 	<property name="archiver" value="ar"/>
 	<!-- the compilerPrefix for the C & C++ compilers -->
-	<property name="compilerPrefix" value="x86_64-w64-mingw32-"/>
+	<property name="compilerPrefix" value="ccache_x86_64-w64-mingw32-"/>
 	<!-- the compilerSuffix for the C & C++ compilers -->
-	<property name="compilerSuffix" value=".exe" />
+	<property name="compilerSuffix" value="" />
 	
 	<!-- define gcc compiler, options and files to compile -->
 	<property name="gcc" value="${compilerPrefix}${cCompiler}${compilerSuffix}"/>	
-	<property name="gcc-opts" value="-c -Wall -O2 -mfpmath=sse -msse2 -fmessage-length=0 -m64 -frtti -fexceptions"/>
+	<property name="gcc-opts" value="-c -Wall -O2 -mfpmath=sse -msse2 -fmessage-length=0 -m64 -w -frtti -fexceptions"/>
 	<fileset id="gcc-files" dir="./">
 		<exclude name="target/"/>		
 				<include name="memcpy_wrap.c"/>
-		<include name="**/*.cpp"/>
+		<include name="**/*.c"/>
 
 		
 	</fileset>
 	
 	<!-- define g++ compiler, options and files to compile -->
 	<property name="g++" value="${compilerPrefix}${cppCompiler}${compilerSuffix}"/>
-	<property name="g++-opts" value="-c -Wall -O2 -mfpmath=sse -msse2 -fmessage-length=0 -m64 -std=c++11 -frtti -fexceptions"/>
+	<property name="g++-opts" value="-c -Wall -O2 -mfpmath=sse -msse2 -fmessage-length=0 -m64 -w -std=c++11 -frtti -fexceptions"/>
 	<fileset id="g++-files" dir="./">
 		<exclude name="target/"/>
 				<include name="**/*.cpp"/>
@@ -45,7 +45,7 @@
 	<!-- define linker and options -->
 	<property name="linker" value="${compilerPrefix}${cppCompiler}${compilerSuffix}"/>
 	<property name="linker-opts" value="-Wl,--kill-at -shared -static -static-libgcc -static-libstdc++ -m64"/>
-	<property name="libraries" value="-L./../../../../../jni/realsense/libs/win64 -lrealsense2"/>
+	<property name="libraries" value="-L./../../../../../jni/libs/win64 -lrealsense2"/>
 
 	<!-- define stripper -->
 	<property name="stripper" value="${compilerPrefix}strip${compilerSuffix}"/>
@@ -118,7 +118,9 @@
 			<arg value="-Ijni-headers"/>
 			<arg value="-Ijni-headers/${jniPlatform}"/>
 			<arg value="-I."/>
-						<arg value="-Irealsense"/>
+						<arg value="-Icpp/jnigen"/>
+			<arg value="-Icpp/realsense"/>
+			<arg value="-Icpp/realsense/include"/>
 
 			<srcfile/>
 			<arg value="-o"/>
@@ -134,7 +136,9 @@
 			<arg value="-Ijni-headers"/>
 			<arg value="-Ijni-headers/${jniPlatform}"/>
 			<arg value="-I."/>
-						<arg value="-Irealsense"/>
+						<arg value="-Icpp/jnigen"/>
+			<arg value="-Icpp/realsense"/>
+			<arg value="-Icpp/realsense/include"/>
 
 			<srcfile/>
 			<arg value="-o"/>

@@ -44,9 +44,9 @@ public class RsContext extends LrsClass{
     }
 
     /*JNI
-    #include "include/error.h"
-    #include "include/librealsense2/rs.h"
-    #include "include/librealsense2/hpp/rs_context.hpp"
+    #include <error.h>
+    #include <librealsense2/rs.h>
+    #include <librealsense2/hpp/rs_context.hpp>
      */
 
     private static native long nCreate(); /*

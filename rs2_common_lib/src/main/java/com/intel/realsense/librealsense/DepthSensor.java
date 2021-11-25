@@ -4,9 +4,9 @@ public class DepthSensor extends Sensor {
 
     /*JNI
     #include <jni.h>
-    #include "include/error.h"
+    #include <error.h>
 
-    #include "include/librealsense2/rs.h"
+    #include <librealsense2/rs.h>
      */
 
     DepthSensor(long handle) {

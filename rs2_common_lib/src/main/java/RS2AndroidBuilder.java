@@ -10,60 +10,36 @@ public class RS2AndroidBuilder {
     public static void main(String[] args) throws Exception {
 
         String libName = "rs2";
+
         String[] classes = new String[]{
-                "**/RsContext.java",
-                "**/DeviceList.java",
-                "**/Device.java",
-                "**/Pipeline.java",
-                "**/PipelineProfile.java",
-                "**/Config.java",
-                "**/Frame.java",
-                "**/FrameSet.java",
-                "**/FrameQueue.java",
-                "**/DepthFrame.java",
-                "**/VideoFrame.java",
-                "**/Points.java",
-                "**/StreamProfile.java",
-                "**/Sensor.java",
-                "**/Options.java",
-                "**/ProcessingBlock.java",
-                "**/Align.java",
-                "**/Colorizer.java",
-                "**/DecimationFilter.java",
-                "**/DisparityTransformFilter.java",
-                "**/HoleFillingFilter.java",
-                "**/Pointcloud.java",
-                "**/SpatialFilter.java",
-                "**/TemporalFilter.java",
-                "**/ThresholdFilter.java",
-                "**/ZeroOrderInvalidationFilter.java",
-                "**/YuyDecoder.java",
-                "**/HdrMerge.java",
-                "**/SequenceIdFilter.java",
-                "**/DepthSensor.java",
-                "**/RoiSensor.java",
-                "**/VideoStreamProfile.java",
-                "**/MotionStreamProfile.java",
-                "**/Utils.java",
-                "**/FwLogger.java",
-                "**/FwLogMsg.java",
-                "**/FwLogParsedMsg.java",
+                "**/*.java",
+        };
+
+        String[] excludeClasses = new String[]{
+                "**/DeviceWatcher.java",
+                "**/DebugProtocol.java",
+                "**/UpdateDevice.java",
+                "**/Updatable.java",
+
+                "**/RS2AndroidBuilder.java",
+                "**/RS2DesktopBuilder.java",
+                "**/RS2MacOSBuilder.java",
+                "**/RS2WindowsBuilder.java"
         };
         new NativeCodeGenerator().generate(
                 "src/main/java/",
                 "build/classes/java/main",
-                "jni/realsense",
+                "jni/cpp/jnigen",
                 classes,
-                new String[]{
-                        "**/RS2AndroidBuilder.java",
-                        "**/RS2DesktopBuilder.java"
-                }
+                excludeClasses
         );
         String[] headerDirs = new String[]{
-                "realsense"
+                "cpp/jnigen",
+                "cpp/realsense",
+                "cpp/realsense/include"
         };
         String[] cIncludes = new String[]{
-                "**/*.cpp"
+                "**/*.c"
         };
         String[] cppIncludes = new String[]{
                 "**/*.cpp"
@@ -71,10 +47,9 @@ public class RS2AndroidBuilder {
         String[] excludes = new String[]{
                 "**/frame_callback_desktop.cpp"
         };
-        String cFlags = " -frtti -fexceptions";
-        String cppFlags = " -std=c++11 -frtti -fexceptions";
+        String cFlags = " -w -frtti -fexceptions";
+        String cppFlags = " -w -std=c++11 -frtti -fexceptions";
 
-        // PATH START AT NativeCodeGenerator JNI PARAM (check above)
         BuildConfig buildConfig = new BuildConfig(libName, "../build/tmp/realsense/target", "libs", "jni");
 
         BuildTarget android = BuildTarget.newDefaultTarget(BuildTarget.TargetOs.Android, SharedLibraryLoader.is64Bit, SharedLibraryLoader.isARM);
@@ -91,16 +66,16 @@ public class RS2AndroidBuilder {
                 "include $(CLEAR_VARS)",
                 "LOCAL_MODULE := librealsense2",
                 "ifeq ($(TARGET_ARCH_ABI), arm64-v8a)",
-                "LOCAL_SRC_FILES := realsense/libs/arm64-v8a/librealsense2.so",
+                "LOCAL_SRC_FILES := libs/arm64-v8a/librealsense2.so",
                 "endif",
                 "ifeq ($(TARGET_ARCH_ABI), armeabi-v7a)",
-                "LOCAL_SRC_FILES := realsense/libs/armeabi-v7a/librealsense2.so",
+                "LOCAL_SRC_FILES := libs/armeabi-v7a/librealsense2.so",
                 "endif",
                 "ifeq ($(TARGET_ARCH_ABI), x86)",
-                "LOCAL_SRC_FILES := realsense/libs/X86/librealsense2.so",
+                "LOCAL_SRC_FILES := libs/X86/librealsense2.so",
                 "endif",
                 "ifeq ($(TARGET_ARCH_ABI), x86_64)",
-                "LOCAL_SRC_FILES := realsense/libs/X86_64/librealsense2.so",
+                "LOCAL_SRC_FILES := libs/X86_64/librealsense2.so",
                 "endif",
                 "include $(PREBUILT_SHARED_LIBRARY)", // FOR .so files
         };

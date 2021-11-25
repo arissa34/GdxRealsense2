@@ -54,10 +54,10 @@ public class Config extends LrsClass {
 
     /*JNI
     #include <jni.h>
-    #include "include/error.h"
+    #include <error.h>
 
-    #include "include/librealsense2/rs.h"
-    #include "include/librealsense2/h/rs_config.h"
+    #include <librealsense2/rs.h>
+    #include <librealsense2/h/rs_config.h>
      */
 
     @Override

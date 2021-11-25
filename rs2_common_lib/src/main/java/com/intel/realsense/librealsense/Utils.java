@@ -60,9 +60,9 @@ public class Utils {
 
 #include <jni.h>
 #include <memory>
-#include "include/error.h"
-#include "include/librealsense2/rs.hpp"
-#include "include/librealsense2/rsutil.h"
+#include <error.h>
+#include <librealsense2/rs.hpp>
+#include <librealsense2/rsutil.h>
 
 // helper method for retrieving rs2_intrinsics from intrinsic object
 rs2_intrinsics intrinsic_jobject2rs(JNIEnv *env, jobject intrinsic) {

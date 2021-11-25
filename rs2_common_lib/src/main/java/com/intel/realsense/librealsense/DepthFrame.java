@@ -16,8 +16,8 @@ public class DepthFrame extends VideoFrame {
 
     /*JNI
     #include <jni.h>
-    #include "include/error.h"
-    #include "include/librealsense2/rs.h"
+    #include <error.h>
+    #include <librealsense2/rs.h>
      */
 
     private static native float nGetDistance(long handle, int x, int y);/*

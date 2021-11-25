@@ -15,57 +15,34 @@ public class RS2WindowsBuilder {
     public static void main(String[] args) throws Exception {
 
         String libName = "rs2";
+
         String[] classes = new String[]{
-                "**/RsContext.java",
-                "**/DeviceList.java",
-                "**/Device.java",
-                "**/Pipeline.java",
-                "**/PipelineProfile.java",
-                "**/Config.java",
-                "**/Frame.java",
-                "**/FrameSet.java",
-                "**/FrameQueue.java",
-                "**/DepthFrame.java",
-                "**/VideoFrame.java",
-                "**/Points.java",
-                "**/StreamProfile.java",
-                "**/Sensor.java",
-                "**/Options.java",
-                "**/ProcessingBlock.java",
-                "**/Align.java",
-                "**/Colorizer.java",
-                "**/DecimationFilter.java",
-                "**/DisparityTransformFilter.java",
-                "**/HoleFillingFilter.java",
-                "**/Pointcloud.java",
-                "**/SpatialFilter.java",
-                "**/TemporalFilter.java",
-                "**/ThresholdFilter.java",
-                "**/ZeroOrderInvalidationFilter.java",
-                "**/YuyDecoder.java",
-                "**/HdrMerge.java",
-                "**/SequenceIdFilter.java",
-                "**/DepthSensor.java",
-                "**/RoiSensor.java",
-                "**/VideoStreamProfile.java",
-                "**/MotionStreamProfile.java",
-                "**/Utils.java",
-                "**/FwLogger.java",
-                "**/FwLogMsg.java",
-                "**/FwLogParsedMsg.java",
+                "**/*.java",
+        };
+
+        String[] excludeClasses = new String[]{
+                "**/DeviceWatcher.java",
+                "**/DebugProtocol.java",
+                "**/UpdateDevice.java",
+                "**/Updatable.java",
+
+                "**/RS2AndroidBuilder.java",
+                "**/RS2DesktopBuilder.java",
+                "**/RS2MacOSBuilder.java",
+                "**/RS2WindowsBuilder.java"
         };
         new NativeCodeGenerator().generate(
                 "src/main/java/",
                 "build/classes/java/main",
-                "jni/realsense",
+                "jni/cpp/jnigen",
                 classes,
-                new String[]{
-                        "**/RS2AndroidBuilder.java",
-                        "**/RS2DesktopBuilder.java"
-                }
+                excludeClasses
         );
+
         String[] headerDirs = new String[]{
-                "realsense"
+                "cpp/jnigen",
+                "cpp/realsense",
+                "cpp/realsense/include"
         };
         String[] cIncludes = new String[]{
                 "**/*.cpp"
@@ -76,10 +53,9 @@ public class RS2WindowsBuilder {
         String[] excludes = new String[]{
                 "**/frame_callback_android.cpp"
         };
-        String cFlags = " -frtti -fexceptions";
-        String cppFlags = " -std=c++11 -frtti -fexceptions";
+        String cFlags = " -w -frtti -fexceptions";
+        String cppFlags = " -w -std=c++11 -frtti -fexceptions";
 
-        // PATH START AT NativeCodeGenerator JNI PARAM (check above)
         BuildConfig buildConfig = new BuildConfig(libName, "../build/tmp/realsense/target", "libs", "jni");
 
         BuildTarget win64 = BuildTarget.newDefaultTarget(BuildTarget.TargetOs.Windows, true, false);
@@ -91,7 +67,7 @@ public class RS2WindowsBuilder {
         win64.cppIncludes = cppIncludes;
         win64.cppExcludes = excludes;
         win64.compilerSuffix = ".exe";  // If you build that on windows don't forget that !
-        win64.libraries = "-L./../../../../../jni/realsense/libs/win64 -lrealsense2";
+        win64.libraries = "-L./../../../../../jni/libs/win64 -lrealsense2";
 
         new AntScriptGenerator().generate(buildConfig, win64);
 

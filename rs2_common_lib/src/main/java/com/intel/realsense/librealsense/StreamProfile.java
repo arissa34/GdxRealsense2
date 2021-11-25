@@ -75,8 +75,8 @@ public class StreamProfile extends LrsClass {
     /*JNI
     #include <jni.h>
     #include <cstring>      //for memcpy
-    #include "include/error.h"
-    #include "include/librealsense2/rs.h"
+    #include <error.h>
+    #include <librealsense2/rs.h>
      */
 
     private static native boolean nIsProfileExtendableTo(long handle, int extension);/*
